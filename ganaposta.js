@@ -2,24 +2,20 @@ function sendvotes() {
     let createdTokens = [];
     function hacerGanarAPosta(tokenArray) {
         console.log(tokenArray)
+        let votes = [0, 3, 5, 0, 0, 5, 4, 3, 5, 1]
         for (token in tokenArray) {
             console.log("voting for: " + tokenArray[token])
-            $.post('https://api.premios.filo.news/api/users/update', {
-                votes: [
-                    "0",
-                    "3",
-                    "5",
-                    "0",
-                    "0",
-                    "5",
-                    "4",
-                    "3",
-                    "5",
-                    "1"
-                ],
-                id: tokenArray[token],
-                index: 9,
-                vote: 1
+            $.ajax({
+                url: 'https://api.premios.filo.news/api/users/update',
+                type: "POST",
+                data: {
+                    id: tokenArray[token],
+                    index: 9,
+                    vote: 1,
+                    votes: votes
+                },
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
             }).then(data => {
                 console.log(`voted`);
             }).catch(error => {
@@ -39,7 +35,7 @@ function sendvotes() {
     }
 
     async function createAccounts() {
-        let accountsToCreate = 1000;
+        let accountsToCreate = 5;
         let timeout = 0;
         let resolvedUsers = 0;
         return new Promise(async (resolve, reject) => {
