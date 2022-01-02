@@ -1,23 +1,33 @@
 function sendvotes() {
+var counterText = document.getElementById("counter")
+
     let createdTokens = [];
+    let initialVotes = 1000
     function hacerGanarAPosta(tokenArray) {
-        console.log(tokenArray)
-        let votes = [0, 3, 5, 0, 0, 5, 4, 3, 5, 1]
+        let status = document.getElementById("status");
+        status.innerText = "Enviando votos";
         for (token in tokenArray) {
-            console.log("voting for: " + tokenArray[token])
-            $.ajax({
-                url: 'https://api.premios.filo.news/api/users/update',
-                type: "POST",
-                data: {
-                    id: tokenArray[token],
-                    index: 9,
-                    vote: 1,
-                    votes: votes
-                },
-                contentType: "application/json; charset=utf-8",
-                dataType: "json",
+            //console.log("voting for: " + tokenArray[token])
+            axios.post('https://api.premios.filo.news/api/users/update', {
+                votes: [
+                    "0",
+                    "3",
+                    "5",
+                    "0",
+                    "0",
+                    "5",
+                    "4",
+                    "3",
+                    "5",
+                    "1"
+                ],
+                id: tokenArray[token],
+                index: 9,
+                vote: 1
             }).then(data => {
-                console.log(`voted`);
+                //console.log(`voted`);
+                initialVotes-=1;
+                counterText.innerText = initialVotes.toString()
             }).catch(error => {
                 console.log(error)
             })
@@ -27,7 +37,7 @@ function sendvotes() {
 
     async function create_user() {
         //send post request to "https://api.premios.filo.news/api/users/create"
-        return $.post(
+        return axios.post(
             'https://api.premios.filo.news/api/users/create',
         ).catch(error => {
             console.log(error)
@@ -35,18 +45,22 @@ function sendvotes() {
     }
 
     async function createAccounts() {
-        let accountsToCreate = 5;
-        let timeout = 0;
+        let accountsToCreate = 1000;
+        let timeout = 5;
         let resolvedUsers = 0;
+        let status = document.getElementById("status");
+        status.innerText = "Creando bots (0/1000)";
         return new Promise(async (resolve, reject) => {
 
             for (let accountsCreated = 0; accountsCreated < accountsToCreate; accountsCreated++) {
-                console.log("creating user")
+                //console.log("creating user")
                 setTimeout(function () {
                     create_user().then(data => {
-                        createdTokens.push(data.token);
+                        //console.log(data.data.token)
+                        createdTokens.push(data.data.token);
                         resolvedUsers += 1;
-                        console.log("Created user " + resolvedUsers + " (" + data.token + ") " + " of " + accountsToCreate);
+                        //console.log("Created user " + resolvedUsers + " (" + data.data.token + ") " + " of " + accountsToCreate);
+                        status.innerText = `Creando bots (${resolvedUsers}/1000)`;
                         if (resolvedUsers == accountsToCreate) {
                             console.log("resolved: " + resolvedUsers)
                             resolve(resolvedUsers);

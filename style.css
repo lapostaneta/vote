@@ -17,6 +17,15 @@ body{
     font-size: xx-large;
     margin-top: 50px;
 }
+#status{
+  font-family: 'Roboto', sans-serif;
+  font-weight: bolder;
+  color: #fff;
+  font-size: xx-large;
+  position: absolute;
+  left: 15px;
+  top: 15px;
+}
 button, button::after {
     width: calc(auto + 50px);
     height: auto;
